@@ -17,11 +17,11 @@ class HeaderComponent extends Component {
                     <ul className="navbar-nav">
                         {isUserLoggedIn &&
                         <li>
-                            <Link className="nav-link" to="/welcome/Simon">Home</Link>
+                            <Link className="nav-link" to="/locations">Locations anzeigen&nbsp;&nbsp;&nbsp;|</Link>
                         </li>}
                         {isUserLoggedIn &&
                         <li>
-                            <Link className="nav-link" to="/todos">Todos</Link>
+                            <Link className="nav-link" to="/location/-1">Location hinzufügen</Link>
                         </li>}
                     </ul>
                     <ul className="navbar-nav navbar-collapse justify-content-end">

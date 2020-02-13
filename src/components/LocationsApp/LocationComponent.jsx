@@ -14,7 +14,8 @@ export default class LocationComponent extends Component {
         this.state = {
             id: this.props.match.params.id,
             description: "",
-            targetDate: moment(new Date()).format("DD.MM.YYYY"),
+            date: moment(new Date()).format("YYYY-MM-DD"),
+            location: "",
             imageFile: null
         };
 
@@ -28,11 +29,16 @@ export default class LocationComponent extends Component {
             return;
 
         let username = AuthenticationService.getLoggedInUserName();
-        TodoDataService.retrieveTodo(username, this.state.id)
-            .then(response => this.setState({
-                description: response.data.description,
-                targetDate: moment(response.data.targetDate).format("DD.MM.YYYY")
-            }));
+        TodoDataService.retrieveLocation(username, this.state.id)
+            .then(response => {
+                this.setState({
+                    description: response.data.description,
+                    date: moment(response.data.date).format("YYYY-MM-DD")
+                });
+
+                console.log("LocationComponent.componentDidMount(): date: " + this.state.date);
+            })
+            .catch(() => console.log("retrieve Todo failed !!!!!"));
     }
 
 
@@ -41,18 +47,18 @@ export default class LocationComponent extends Component {
 
         let username = AuthenticationService.getLoggedInUserName();
 
-        let todo = {
+        let location = {
             id: this.state.id,
             description: values.description,
-            targetDate: values.targetDate
+            date: values.date
         };
 
         if (this.state.id === -1)
-            TodoDataService.createTodo(username, todo)
-                .then(() => this.props.history.push("/todos"));
+            TodoDataService.createLocation(username, location)
+                .then(() => this.props.history.push("/locations"));
         else
-            TodoDataService.updateTodo(username, this.state.id, todo)
-                .then(() => this.props.history.push("/todos"));
+            TodoDataService.updateLocation(username, this.state.id, location)
+                .then(() => this.props.history.push("/locations"));
     }
 
 
@@ -66,8 +72,8 @@ export default class LocationComponent extends Component {
         else if (values.description.length < 5)
             errors.description = "Enter at least 5 characters in Description";
 
-        if (!moment(values.targetDate).isValid())
-            errors.targetDate = "Enter a valid Target Date";
+        if (!moment(values.date).isValid())
+            errors.date = "Enter a valid Target Date";
 
         return errors;
     }
@@ -80,18 +86,20 @@ export default class LocationComponent extends Component {
 
     render() {
 
-        let {description, targetDate} = this.state;
+        let {description, date} = this.state;
         let username = AuthenticationService.getLoggedInUserName();
 
-        // console.log("TargetDate: " + targetDate);
+        // console.log("date: " + date);
 
         return (
             <div>
-                <h1>Location</h1>
+                <br/>
+                <h2>Location</h2>
+                <hr/>
                 <div className="container">
                     <Formik initialValues={{
                         description,
-                        targetDate
+                        date
                     }}
                             onSubmit={this.onSubmit}
                             validateOnChange={false}
@@ -99,11 +107,11 @@ export default class LocationComponent extends Component {
                             validate={this.validate}
                             enableReinitialize={true}>
                         {
-                            (props) => (
+                            () => (
                                 <Form>
-                                    {console.log("TargetDate: " + targetDate)}
+                                    {console.log("LocationComponent.render(): date: " + date)}
                                     <ErrorMessage className="alert alert-warning" name="description" component="div"/>
-                                    <ErrorMessage className="alert alert-warning" name="targetDate" component="div"/>
+                                    <ErrorMessage className="alert alert-warning" name="date" component="div"/>
                                     <fieldset className="form-group">
                                         <label>Beschreibung</label>
                                         <Field className="form-control" type="text" name="description"/>
@@ -115,15 +123,19 @@ export default class LocationComponent extends Component {
                                     </fieldset>
                                     <fieldset className="form-group">
                                         <label>Datum</label>
-                                        <Field className="form-control" type="date" name="targetDate"/>
+                                        <Field className="form-control" type="date" name="date"/>
                                     </fieldset>
+                                    <fieldset className="form-group">
+                                        <label>Benutzer</label>
+                                        <Field className="form-control" type="text" name="user" value={username} disabled/>
+                                    </fieldset>
+                                    <br/>
                                     <button className="btn btn-success" type="submit">Speichern</button>
                                 </Form>
                             )
                         }
                     </Formik>
                 </div>
-                <div> Location von {username}</div>
             </div>
         );
     }

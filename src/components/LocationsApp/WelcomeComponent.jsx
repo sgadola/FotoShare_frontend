@@ -13,15 +13,13 @@ export class WelcomeComponent extends Component {
                 <div className="container">
                     <br/>
                     <h3>Willkommen {username && username + ","} zur Locations App.<br/></h3>
-                    Sie können <Link to="/todos">hier</Link> Ihre eigenen Locations die Sie besucht haben eintragen und
-                    bearbeiten,<br/>
-                    Sie können n&auml;mlich auch Orte anzeigen, die andere Benutzer bereits erstellt haben.<br/>
+                    Sie können <Link to="/locations">hier</Link> Ihre eigenen Locations die Sie besucht haben hinzufügen und bearbeiten,<br/>
+                    oder Sie können auch die Orte anzeigen, welche die anderen unten aufgelisteten Benutzer bereits erstellt haben.<br/>
                     <br/>
                     <h5>Benutzerliste</h5>
-                    Bitte wähle sie unten aus der Benutzerliste den Benutzer aus, dessen Locations Sie anzeigen
-                    wollen.<br/>
+                    Bitte w&auml;hlen Sie unten aus der Benutzerliste den Benutzer aus, dessen Locations Sie anzeigen wollen.<br/>
                     <ul>
-                        <li>User 1</li>
+                        <li><Link to="/locations">Benutzer 1</Link></li>
                     </ul>
                 </div>
             </div>

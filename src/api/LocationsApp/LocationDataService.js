@@ -1,43 +1,51 @@
 import axios from "axios";
 
-import {JPA_API_URL} from "../../constants";
+import {API_URL} from "../../constants";
 
 
 class LocationDataService {
 
-    retrieveAllTodos(name) {
-        console.log("LocationDataService.retrieveAllTodos()");
+    retrieveAllLocations() {
+        console.log("LocationDataService.retrieveAllLocations()");
 
-        return axios.get(`${JPA_API_URL}/users/${name}/todos`);
+        return axios.get(`${API_URL}/locations`);
     }
 
 
-    retrieveTodo(name, id) {
-        console.log("LocationDataService.retrieveTodo()");
+    retrieveAllLocationsByUsername(username) {
+        console.log("LocationDataService.retrieveAllLocations()");
 
-        return axios.get(`${JPA_API_URL}/users/${name}/todos/${id}`);
+        return axios.get(`${API_URL}/locations/${username}`);
     }
 
 
-    deleteTodo(name, id) {
-        console.log("LocationDataService.deleteTodo()");
+    retrieveLocation(id) {
+        console.log("LocationDataService.retrieveLocation()");
 
-        return axios.delete(`${JPA_API_URL}/users/${name}/todos/${id}`);
+        return axios.get(`${API_URL}/location/${id}`);
     }
 
 
-    updateTodo(name, id, todo) {
-        console.log("LocationDataService.updateTodo()");
+    deleteLocation(id) {
+        console.log("LocationDataService.deleteLocation()");
 
-        return axios.put(`${JPA_API_URL}/users/${name}/todos/${id}`, todo);
+        return axios.delete(`${API_URL}/location/${id}`);
     }
 
 
-    createTodo(name, todo) {
-        console.log("LocationDataService.createTodo()");
+    updateLocation(id, location) {
+        console.log("LocationDataService.updateLocation()");
 
-        return axios.put(`${JPA_API_URL}/users/${name}/todos`, todo);
+        return axios.put(`${API_URL}/location/${id}`, location);
+    }
+
+
+    createLocation(location) {
+        console.log("LocationDataService.createLocation()");
+
+        return axios.put(`${API_URL}/location/new`, location);
     }
 }
+
 
 export default new LocationDataService();

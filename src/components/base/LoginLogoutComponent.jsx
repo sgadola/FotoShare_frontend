@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+
 import AuthenticationService from "../authentication/AuthenticationService";
 
 
@@ -10,8 +11,7 @@ export class LoginComponent extends Component {
         this.state = {
             username: '',
             password: '',
-            hasLoginFailed: false,
-            showSuccessMessage: false
+            hasLoginFailed: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -28,7 +28,6 @@ export class LoginComponent extends Component {
                 <div className="container">
                     {this.state.hasLoginFailed &&
                     <div className="alert alert-warning">Ung&uuml;ltige Anmeldedaten</div>}
-                    {this.state.showSuccessMessage && <div>Anmeldung erfolgreich</div>}
                     <table className="table">
                         <tbody>
                         <tr>
@@ -55,7 +54,9 @@ export class LoginComponent extends Component {
                         </tr>
                         <tr>
                             <td>
-                                <button className="btn btn-success" type="submit" onClick={this.loginClicked}>Anmelden
+                                <button className="btn btn-success"
+                                        type="submit"
+                                        onClick={this.loginClicked}>Anmelden
                                 </button>
                             </td>
                         </tr>
@@ -88,10 +89,9 @@ export class LoginComponent extends Component {
             .executeJwtAuthenticationService(this.state.username, this.state.password)
             .then((response) => {
                 AuthenticationService.registerSuccessfulLoginForJwt(this.state.username, response.data.token);
-                this.props.history.push(`/welcome/${this.state.username}`)
+                this.props.history.push("/welcome")
             })
             .catch(() => {
-                this.setState({showSuccessMessage: false});
                 this.setState({hasLoginFailed: true})
             })
     }

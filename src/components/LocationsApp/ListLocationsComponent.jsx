@@ -10,18 +10,18 @@ export class ListLocationsComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            todos: [
-                {id: 1, description: 'Learn to dance', done: false, targetDate: new Date()},
-                {id: 2, description: 'Become an expert at React', done: false, targetDate: new Date()},
-                {id: 3, description: 'Visit India', done: false, targetDate: new Date()}
+            locations: [
+                {id: 1, description: 'Wunderschönes Bern',  date: new Date(), location: "Bern"},
+                {id: 2, description: 'Wunderschönes London', date: new Date(), location: "London"},
+                {id: 3, description: 'Wunderschönes Tokyo',  date: new Date(), location: "Tokyo"}
             ],
             message: null
         };
 
-        this.deleteTodoClicked = this.deleteTodoClicked.bind(this);
-        this.updateTodoClicked = this.updateTodoClicked.bind(this);
-        this.addTodoClicked = this.addTodoClicked.bind(this);
-        this.refreshTodos = this.refreshTodos.bind(this);
+        this.deleteLocationClicked = this.deleteLocationClicked.bind(this);
+        this.editLocationClicked = this.editLocationClicked.bind(this);
+        this.addLocationClicked = this.addLocationClicked.bind(this);
+        this.refreshLocations = this.refreshLocations.bind(this);
     }
 
 
@@ -30,7 +30,8 @@ export class ListLocationsComponent extends Component {
 
         return (
             <div>
-                <h1>List Todos</h1>
+                <br/>
+                <h2>Liste von Locations des Benutzers "{AuthenticationService.getLoggedInUserName()}"</h2>
                 {this.state.message && <div className="alert alert-success">{this.state.message}</div>}
                 <div className="container">
                     <table className="table">
@@ -38,31 +39,31 @@ export class ListLocationsComponent extends Component {
                         <tr>
                             <th>Beschreibung</th>
                             <th>Datum</th>
-                            <th>Is completed?</th>
+                            <th>Ort</th>
                             <th>Bearbeiten</th>
                             <th>L&ouml;schen</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {this.state.todos.map(
-                            todo =>
-                                <tr key={todo.id}>
-                                    <td>{todo.description}</td>
-                                    <td>{moment(todo.targetDate).format("dddd, Do MMMM YYYY")}</td>
+                        {this.state.locations.map(
+                            location =>
+                                <tr key={location.id}>
+                                    <td>{location.description}</td>
+                                    <td>{moment(location.date).format("dddd, Do MMMM YYYY")}</td>
                                     {/*DD.MM.YYYY*/}
-                                    <td>{todo.done.toString()}</td>
+                                    <td>{location.location.toString()}</td>
                                     <td>
-                                        <button className="btn btn-success" onClick={() => this.updateTodoClicked(todo.id)}>Bearbeiten</button>
+                                        <button className="btn btn-success" onClick={() => this.editLocationClicked(location.id)}>Bearbeiten</button>
                                     </td>
                                     <td>
-                                        <button className="btn btn-warning" onClick={() => this.deleteTodoClicked(todo.id)}>L&ouml;schen</button>
+                                        <button className="btn btn-warning" onClick={() => this.deleteLocationClicked(location.id)}>L&ouml;schen</button>
                                     </td>
                                 </tr>
                         )}
                         </tbody>
                     </table>
                     <div className="row">
-                        <button className="btn btn-success" onClick={this.addTodoClicked}>Hinzuf&uuml;gen</button>
+                        <button className="btn btn-success" onClick={this.addLocationClicked}>Hinzuf&uuml;gen</button>
                     </div>
                 </div>
             </div>
@@ -73,7 +74,7 @@ export class ListLocationsComponent extends Component {
     componentDidMount() {
         console.log("ListLocationsComponent.componentDidMount()");
 
-        this.refreshTodos();
+        this.refreshLocations();
         console.log(this.state);
     }
 
@@ -90,42 +91,45 @@ export class ListLocationsComponent extends Component {
     }
 
 
-    refreshTodos() {
+    refreshLocations() {
         console.log("ListLocationsComponent.refreshTodos()");
 
         let username = AuthenticationService.getLoggedInUserName();
 
-		// Schori
+        // Schori
         //AuthenticationService.registerSuccessfulLoginForJwt(this.state.username, sessionStorage.getItem("authenticationToken"));
 
-        TodoDataService.retrieveAllTodos(username).then(response => {
+        TodoDataService.retrieveAllLocations(username).then(response => {
             console.log(response);
 
-            this.setState({todos: response.data});
-        })
+            this.setState({locations: response.data})
+
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
 
-    deleteTodoClicked(id) {
+    deleteLocationClicked(id) {
         let username = AuthenticationService.getLoggedInUserName(id);
 
-        TodoDataService.deleteTodo(username, id).then(() => {
-            this.setState({message: `Delete of todo ${id} was successful.`});
-            this.refreshTodos();
+        TodoDataService.deleteLocation(username, id).then(() => {
+            this.setState({message: `Location ${id} wurde erfolgreich gel&ouml;scht.`});
+            this.refreshLocations();
         });
 
         console.log(username);
     }
 
 
-    addTodoClicked() {
-        this.props.history.push("/todos/-1");
+    addLocationClicked() {
+        this.props.history.push("/location/-1");
     }
 
 
-    updateTodoClicked(id) {
+    editLocationClicked(id) {
         console.log("updated LocationsApp with id " + id + "!");
 
-        this.props.history.push(`/todos/${id}`);
+        this.props.history.push(`/location/${id}`);
     }
 }

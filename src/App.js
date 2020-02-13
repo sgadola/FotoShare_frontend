@@ -1,5 +1,5 @@
 import React from 'react';
-import LocationsApp from './components/LocationsApp/LocationsApp';
+import LocationsApp from './LocationsApp';
 
 import './App.css';
 import './bootstrap.css';
